@@ -83,7 +83,27 @@ Freda likes to play Starfleet Commander, Ninja Hamsters, Seahorse Adventures."
 # Return: 
 #   The new network data structure
 def create_data_structure(string_input):
+    sentences = [sentence.strip() for sentence in string_input.split('.')]
+    network = [parse_sentence(sentence) for sentence in sentences]
     return network
+
+def parse_sentence(s):
+    words = [word.strip().lower() for word in s.split()]
+    if len(words) < 3:
+        return None
+    name = words[0]
+    if words[1] == 'is': 
+        s_type = 'conns'
+    else:
+        s_type = 'games'
+    value_string = ' '.join(words[4:])
+    values = value_string.split(', ')
+    parsed = {'name': name,
+              'conns': set([]),
+              'games': set([])}
+    parsed[s_type] = values
+    return parsed
+
 
 # ----------------------------------------------------------------------------- # 
 # Note that the first argument to all procedures below is 'network' This is the #
@@ -104,8 +124,16 @@ def create_data_structure(string_input):
 #   A list of all connections the user has. If the user has no connections, 
 #   return an empty list. If the user is not in network, return None.  
 def get_connections(network, user):
-	return []
+    name = user.lower()
+    if not network:
+        return False
+    for user in network:
+        if not user:
+            continue
+        if user['name'] == name:
+            return user['conns']
 
+network = create_data_structure(example_input)
 # ----------------------------------------------------------------------------- 
 # add_connection(network, user_A, user_B): 
 #   Adds a connection from user_A to user_B. Make sure to check that both users 
@@ -120,7 +148,27 @@ def get_connections(network, user):
 #   The updated network with the new connection added (if necessary), or False 
 #   if user_A or user_B do not exist in network.
 def add_connection(network, user_A, user_B):
-	return network
+    user_A = user_A.lower()
+    user_B = user_B.lower()
+    A_in = False
+    B_in = False
+    for person in network:
+        if not person:
+            continue
+        if person['name'] == user_B:
+            B_in = True
+        if person['name'] == user_A:
+            A_in = True
+    if not A_in and B_in:
+        return False
+    for user in network:
+        if not user:
+            continue
+        if user['name'] == user_A:
+            user['conns'].append(user_B)
+            return network
+        
+	return False
 
 # ----------------------------------------------------------------------------- 
 # add_new_user(network, user, games): 
@@ -138,8 +186,28 @@ def add_connection(network, user_A, user_B):
 #   The updated network with the new user and game preferences added. If the 
 #   user is already in the network, update their game preferences as necessary.
 def add_new_user(network, user, games):
+    user = user.lower()
+    for person in network:
+        if not person:
+            continue
+        if not person['name']:
+            continue
+        elif person['name'] == user:
+            if person['games']:
+                print person['games']
+            print games
+            if games:
+                person['games'].add(games)
+            return network
+
+    user_dict = {'name': user.lower(),
+                 'conns': set([]),
+                 'games': set(games)}
+    network.append(user_dict)
+                
     return network
-		
+
+
 # ----------------------------------------------------------------------------- 
 # get_secondary_connections(network, user): 
 #   Finds all the secondary connections, i.e. connections of connections, of a 
@@ -217,16 +285,15 @@ def path_to_friend(network, user, connection):
 # Replace this with your own procedure! You can also uncomment the lines below
 # to see how your code behaves. Have fun! 
 
-#net = create_data_structure(example_input)
-#print net
-#print path_to_friend(net, 'John', 'Ollie')
-#print get_connections(net, "Debra")
-#print add_new_user(net, "Debra", []) # False - Debra is already in network
-#print add_new_user(net, "Nick", ["Seven Schemers", "The Movie: The Game"]) # True
-#print get_connections(net, "Mercedes")
-#print add_connection(net, "John", "Freda")
-#print secondary_connections(net, "Mercedes")
-#print connections_in_common(net, "Mercedes", "John")
+net = create_data_structure(example_input)
+path_to_friend(net, 'John', 'Ollie')
+get_connections(net, "Debra")
+add_new_user(net, "Debra", []) # False - Debra is already in network
+add_new_user(net, "Nick", ["Seven Schemers", "The Movie: The Game"]) # True
+get_connections(net, "Mercedes")
+add_connection(net, "John", "Freda")
+get_secondary_connections(net, "Mercedes")
+connections_in_common(net, "Mercedes", "John")
 
 
 
