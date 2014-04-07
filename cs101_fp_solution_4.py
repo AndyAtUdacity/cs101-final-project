@@ -128,7 +128,7 @@ def path_to_friend(network, user_A, user_B, already_checked = []):
 				if ptf:
 					return [user_A] + ptf
 			else: pass
-		return None
+		
 
 def is_valid_path(network, user_A, user_B, student_path):
 	if not student_path:

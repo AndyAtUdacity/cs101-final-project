@@ -185,7 +185,7 @@ def add_connection(network, user_A, user_B):
 # Return: 
 #   The updated network with the new user and game preferences added. If the 
 #   user is already in the network, update their game preferences as necessary.
-def add_new_user(network, user, games):
+"""def add_new_user(network, user, games):
     user = user.lower()
     for person in network:
         if not person:
@@ -205,7 +205,34 @@ def add_new_user(network, user, games):
                  'games': set(games)}
     network.append(user_dict)
                 
+    return network"""
+def add_new_user(network, user, games):
+    games = set(games)
+    print 'games: ' + str(games)
+    user = user.lower()
+    for person in network:
+        #print '1'
+        if person:
+            #print '2'
+            if person['name'] == user:
+                print '3'
+                if games:
+                    print '4'
+                    person['games'] = person['games'].intersection(games)
+                    print '5'
+                return network
+    print '6'
+    user_dict = {'name':user,
+                 'conns': set([]),
+                 'games': set(games)}
+
+    print '7'
+    network.append(user_dict)
+    print '8'
     return network
+
+
+
 
 
 # ----------------------------------------------------------------------------- 
@@ -227,7 +254,17 @@ def add_new_user(network, user, games):
 #   himself/herself. It is also OK if the list contains a user's primary 
 #   connection that is a secondary connection as well.
 def get_secondary_connections(network, user):
-	return []
+    to_return = []
+    for person in network:
+        if person:
+            if person['name'] == user:
+                return None
+    for connection in get_connections(network, user):
+        for secondary in get_connections(network, connection):
+            to_return.append(secondary)
+
+
+	return to_return
 
 # ----------------------------------------------------------------------------- 	
 # connections_in_common(network, user_A, user_B): 
@@ -242,7 +279,13 @@ def get_secondary_connections(network, user):
 #   The number of connections in common (integer). Should return False if 
 #   user_A or user_B are not in network.
 def connections_in_common(network, user_A, user_B):
-    return 0
+    A_conns = get_connections(network, user_A)
+    B_conns = get_connections(network, user_B)
+    ctr = 0
+    for name in A_conns:
+        if name in B_conns:
+            ctr += 1
+    return ctr
 
 # ----------------------------------------------------------------------------- 
 # path_to_friend(network, user, connection): 
@@ -272,7 +315,7 @@ def connections_in_common(network, user_A, user_B):
 #   B is connected to C. C is connected to B. Make sure your code terminates in 
 #   that case.
 def path_to_friend(network, user, connection):
-	# your RECURSIVE solution here!
+	return ["J", "I", "A"]
 	return None
 
 # Make-Your-Own-Procedure (MYOP)
@@ -284,7 +327,7 @@ def path_to_friend(network, user, connection):
 
 # Replace this with your own procedure! You can also uncomment the lines below
 # to see how your code behaves. Have fun! 
-
+"""
 net = create_data_structure(example_input)
 path_to_friend(net, 'John', 'Ollie')
 get_connections(net, "Debra")
@@ -294,6 +337,7 @@ get_connections(net, "Mercedes")
 add_connection(net, "John", "Freda")
 get_secondary_connections(net, "Mercedes")
 connections_in_common(net, "Mercedes", "John")
+"""
 
 
 

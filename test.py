@@ -128,8 +128,20 @@ def test(code_file):
 
         # GET CONNECTIONS WORKS
     try:
+        print 'len ' + str(len(stud_network))
+        if DEBUG: 
+            for stud in stud_network:
+                if stud:
+                    if stud['name'] == 'a':
+                        print stud
         stud_network = add_new_user(stud_network, 'A', ['X1', 'X2'])
+        print stud_network
+        if DEBUG: 
+            print 'place 0'
         sol_network = solution.add_new_user(sol_network, 'A', ['X1', 'X2'])
+
+        if DEBUG:
+            print 'place 1'
 
         if set([x.upper() for x in get_connections(stud_network, 'A')]) != set(solution.get_connections(sol_network, 'A')):
             is_correct = 'NO'
@@ -139,18 +151,21 @@ def test(code_file):
 
         stud_network = add_new_user(stud_network, 'G', [])
         sol_network = solution.add_new_user(sol_network, 'G', [])
-
-        if get_connections(stud_network, 'G') != []:
+        if DEBUG:
+            print 'place 3'
+        if len(get_connections(stud_network, 'G')) != 0:
             is_correct = 'NO'
-            comment += "2Your add_new_user function didn't behave as expected when adding a user with no game preferences OR your get_connections function doesn't return an empty list when called with the name of a user with no connections"
+            comment += "Your add_new_user function didn't behave as expected when adding a user with no game preferences OR your get_connections function doesn't return an empty list when called with the name of a user with no connections"
             return is_correct + comment
             
-
+        if DEBUG:
+            print 'hello'
         stud_network = add_new_user(stud_network, 'H', ['X1', 'X7'])
         sol_network = solution.add_new_user(sol_network, 'H', ['X1', 'X7'])
 
-
-        if get_connections(stud_network, 'H') != []:
+        if DEBUG:
+            print 'i am here'
+        if len(get_connections(stud_network, 'H')) != 0:
             is_correct = 'NO'
             comment += "Your add_new_user function didn't behave as expected when adding a user with no game preferences OR your get_connections function doesn't return an empty list when called with the name of a user with no connections"
             return is_correct + comment
@@ -169,8 +184,12 @@ def test(code_file):
     try:
         stud_out1 = get_secondary_connections(stud_network, 'G') 
         sol_out1 = solution.get_secondary_connections(sol_network, 'G')
+        if DEBUG:
+            print sol_out1
         stud_out2 = get_secondary_connections(stud_network, 'J')
         sol_out2 = solution.get_secondary_connections(sol_network, 'J')
+        if DEBUG:
+            print sol_out2
     except:
         if DEBUG:
             print "get_secondary_connections exception" 
@@ -179,7 +198,7 @@ def test(code_file):
         comment += "There was an error calling get_secondary_connections."
         return is_correct + comment
 
-    if (set(stud_out1) != set(sol_out1)) or (set(stud_out2) != set(sol_out2)):
+    if (len(stud_out2) != 1):
         is_correct = "NO"
         comment += "Your get_secondary_connections function didn't behave as expected"
         return is_correct + comment
@@ -192,6 +211,11 @@ def test(code_file):
         q2 = connections_in_common(stud_network, 'G', 'I') == solution.connections_in_common(sol_network, 'G', 'I')
         q3 = connections_in_common(stud_network, 'E', 'I') == solution.connections_in_common(sol_network, 'E', 'I')
         q4 = connections_in_common(stud_network, 'C', 'F') == solution.connections_in_common(sol_network, 'C', 'F')
+        if DEBUG:
+            print q1
+            print q2
+            print q3
+            print q4
     except:
         if DEBUG:
             print 'connections_in_common exception' 
